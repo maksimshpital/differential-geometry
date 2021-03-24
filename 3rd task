@@ -1,0 +1,25 @@
+# Программа вычисления векторов
+
+# Импортируем модуль numpy
+import numpy as np
+
+
+# Вычисление смешанного произведения
+def mixed_multiplication(a, b, c):
+    return round(np.linalg.det([a, b, c]))
+
+
+# Определние компланарности трех векторов
+def complanarity_vectors(a, b, c):
+    return "Вектора компланарны" if mixed_multiplication(a, b, c) == 0 else "Вектора не компланарны"
+
+
+
+# Векторы
+a = (5, 3, -2)
+b = (2, 1, 4)
+c = (1, -2, 6)
+
+
+print(mixed_multiplication(a, b, c))
+print(complanarity_vectors(a, b, c))
