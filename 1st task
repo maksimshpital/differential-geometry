@@ -1,0 +1,20 @@
+import numpy as np
+import math
+
+def gram_matrix(a, b, lenA, lenB, alpha):
+    res = np.array([lenA ** 2, lenA*lenB*math.cos(alpha), lenB**2])
+    invertible = np.array([
+        [a[0]**2, 2*a[0]*a[1], a[1] ** 2],
+        [a[0]*b[0], a[1]*b[0] + b[1]*a[0], a[1]*b[1]],
+        [b[0]**2, 2*b[0]*b[1], b[1]**2]
+    ])
+    proxy = np.linalg.inv(invertible).dot(res)
+    return proxy
+
+
+testA = [0, 1]
+testB = [1, 1]
+lenTestA = 1
+lenTestB = math.sqrt(2)
+testAlpha = math.pi / 4
+print(gram_matrix(testA, testB, lenTestA, lenTestB, testAlpha))
