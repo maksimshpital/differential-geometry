@@ -1,0 +1,43 @@
+class Vector:
+    def __init__(self, classRef, values=[]):
+        self.classRef = classRef
+        self.values = values
+    
+    def __add__(self, rhs):
+        if self.classRef != rhs.classRef:
+            raise "class references must be equal"
+        if len(self.values) != len(rhs.values):
+            raise "cannot sum vectors of different dimensions"
+        return Vector(self.classRef, [*map(lambda v: self.classRef.add(v[0], v[1]), zip(self.values, rhs.values))])
+    
+    def __repr__(self):
+        return repr(self.classRef) + ", ".join(map(str, self.values))
+
+class Rebase:
+    def __init__(self, bias, rules):
+        self.bias = bias
+        self.rules = rules
+    
+    def __call__(self, vector):
+        # предположим, что вектор-это массив чисел, представляющих его координаты.
+        # в аффинном пространстве мы рассматриваем любой элемент как X + sumOf( coord*base_vector )
+        # каждое правило запускается на всех координатах и получается одна новая
+        return self.bias + Vector(self.bias.classRef, [*map( lambda it: it(vector.values), self.rules )])
+        
+        
+if __name__ == "__main__":
+    class RealRef:
+        @staticmethod
+        def add(a, b):
+            return a + b
+    
+    vec1 = Vector(RealRef, [1, 2, 3])
+    vec2 = Vector(RealRef, [2, 0, 1])
+    print(vec1 + vec2)
+    # давайте сделаем x, y, z -> [1, 2, 3] + y*z, x*z, x
+    rules = [
+        lambda v: v[1] + v[2],
+        lambda v: v[0] + v[2],
+        lambda v: v[0]
+    ]
+    print(Rebase(vec1, rules)(vec2))
